@@ -1,0 +1,2441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <!-- SEO Meta Tags -->
+    <title>Spider-Man Web Swing 3D - Ultimate Web-Slinging Experience | Play Now</title>
+    <meta name="description" content="Experience the thrill of web-slinging in stunning 3D with our premium Spider-Man inspired game. Master the cityscape with immersive graphics and sound!">
+    <meta name="keywords" content="spiderman game, 3D web swing, web-slinging, spider-man game, online superhero game, marvel games, spidey swing, 3D gaming">
+    <meta name="author" content="Spider-Man Game Developer">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://yoursite.com/games/spiderman-web-swing/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yoursite.com/games/spiderman-web-swing/">
+    <meta property="og:title" content="Spider-Man Web Swing 3D - Ultimate Web-Slinging Experience">
+    <meta property="og:description" content="Experience the thrill of web-slinging in stunning 3D with our premium Spider-Man inspired game. Master the cityscape with immersive graphics and sound!">
+    <meta property="og:image" content="https://yoursite.com/wp-content/uploads/spiderman-web-swing-preview.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yoursite.com/games/spiderman-web-swing/">
+    <meta property="twitter:title" content="Spider-Man Web Swing 3D - Ultimate Web-Slinging Experience">
+    <meta property="twitter:description" content="Experience the thrill of web-slinging in stunning 3D with our premium Spider-Man inspired game. Master the cityscape with immersive graphics and sound!">
+    <meta property="twitter:image" content="https://yoursite.com/wp-content/uploads/spiderman-web-swing-preview.jpg">
+    
+    <!-- Resources -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Bangers&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Three.js for 3D -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.142.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.142.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.142.0/examples/js/loaders/GLTFLoader.js"></script>
+    
+    <!-- Animation Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    
+    <!-- Particles.js for web effects -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    
+    <!-- Schema.org markup for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": "Spider-Man Web Swing 3D",
+      "description": "An immersive 3D web-slinging game inspired by Spider-Man where players swing through a dynamic cityscape.",
+      "genre": ["Arcade", "Action", "Superhero", "3D"],
+      "platformRequirements": ["Web Browser"],
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "238"
+      }
+    }
+    </script>
+    
+    <style>
+        :root {
+            --spidey-red: #e63946;
+            --spidey-blue: #0a1128;
+            --spidey-dark-blue: #050914;
+            --spidey-light-blue: #4361ee;
+            --spidey-neon-red: #ff003c;
+            --spidey-neon-blue: #00b4fc;
+            --web-gray: #f0f0f0;
+            --glass-bg: rgba(17, 25, 40, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.125);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            cursor: none;
+        }
+        
+        body {
+            font-family: 'Chakra Petch', sans-serif;
+            background-color: var(--spidey-dark-blue);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--spidey-neon-red);
+            pointer-events: none;
+            mix-blend-mode: difference;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            filter: blur(0.5px);
+            box-shadow: 0 0 10px 2px var(--spidey-neon-red);
+        }
+        
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255, 0, 60, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, border-color 0.3s, transform 0.1s;
+        }
+        
+        .cursor.active {
+            width: 40px;
+            height: 40px;
+            background-color: var(--spidey-neon-blue);
+        }
+        
+        .cursor-follower.active {
+            width: 60px;
+            height: 60px;
+            border-color: rgba(0, 180, 252, 0.5);
+            transform: translate(-50%, -50%) scale(0.7);
+        }
+        
+        .game-title {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--spidey-neon-red);
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--spidey-neon-red), var(--spidey-neon-blue));
+        }
+        
+        /* Neon Glow Effects */
+        .neon-text-red {
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--spidey-neon-red), 0 0 20px var(--spidey-neon-red), 0 0 25px var(--spidey-neon-red), 0 0 30px var(--spidey-neon-red), 0 0 35px var(--spidey-neon-red);
+        }
+        
+        .neon-text-blue {
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--spidey-neon-blue), 0 0 20px var(--spidey-neon-blue), 0 0 25px var(--spidey-neon-blue), 0 0 30px var(--spidey-neon-blue), 0 0 35px var(--spidey-neon-blue);
+        }
+        
+        .neon-box {
+            position: relative;
+        }
+        
+        .neon-box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--spidey-neon-red), var(--spidey-neon-blue), var(--spidey-neon-red));
+            z-index: -1;
+            border-radius: inherit;
+            animation: neonBorder 3s linear infinite;
+            background-size: 400%;
+        }
+        
+        @keyframes neonBorder {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        /* Glass Morphism */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 3D Button Effects */
+        .btn-3d {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+            transform: translateZ(0);
+            overflow: hidden;
+        }
+        
+        .btn-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateZ(-5px);
+        }
+        
+        .btn-3d::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+            transform: translateZ(1px);
+        }
+        
+        .btn-3d:hover {
+            transform: translateY(-3px) translateZ(5px);
+        }
+        
+        .btn-spidey {
+            background: linear-gradient(135deg, var(--spidey-red), #ab0000);
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(230, 57, 70, 0.5);
+        }
+        
+        .btn-spidey::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        
+        .btn-spidey:hover {
+            background: linear-gradient(135deg, #ff0022, var(--spidey-red));
+            box-shadow: 0 0 20px rgba(255, 0, 34, 0.7);
+        }
+        
+        .btn-spidey:hover::before {
+            left: 100%;
+        }
+        
+        /* Hero Section with Parallax */
+        .parallax-container {
+            position: relative;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            will-change: transform;
+        }
+        
+        .layer-0 {
+            z-index: 1; /* Background */
+        }
+        
+        .layer-1 {
+            z-index: 2; /* Far buildings */
+        }
+        
+        .layer-2 {
+            z-index: 3; /* Middle buildings */
+        }
+        
+        .layer-3 {
+            z-index: 4; /* Close buildings */
+        }
+        
+        .layer-4 {
+            z-index: 5; /* Foreground content */
+        }
+        
+        .web-design {
+            opacity: 0.15;
+            position: absolute;
+            pointer-events: none;
+        }
+        
+        /* Web Pattern Animation */
+        @keyframes webGrow {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                opacity: 0.15;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
+            }
+        }
+        
+        .web-animate {
+            animation: webGrow 4s infinite ease-in-out;
+        }
+        
+        /* Swinging Animation */
+        @keyframes swing {
+            0% {
+                transform: rotate(-5deg);
+            }
+            50% {
+                transform: rotate(5deg);
+            }
+            100% {
+                transform: rotate(-5deg);
+            }
+        }
+        
+        .swing-animation {
+            animation: swing 3s infinite ease-in-out;
+            transform-origin: top center;
+        }
+        
+        /* 3D Spiderman Model Container */
+        .spiderman-3d-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        
+        /* Game Section */
+        #gameCanvas {
+            display: block;
+            margin: 0 auto;
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(255, 0, 34, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 2;
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--spidey-neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            z-index: 5;
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .sound-toggle {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        
+        .sound-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Game Features */
+        .game-feature-card {
+            background-color: var(--glass-bg);
+            border-left: 4px solid var(--spidey-neon-red);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 0, 60, 0.1) 0%, rgba(0, 180, 252, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .game-feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .game-feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-icon {
+            text-shadow: 0 0 10px currentColor;
+            transition: transform 0.3s ease;
+        }
+        
+        .game-feature-card:hover .feature-icon {
+            transform: scale(1.2);
+        }
+        
+        /* Instructions Section */
+        .instruction-step {
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .instruction-step::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 0, 60, 0.05) 0%, rgba(0, 180, 252, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .instruction-step:hover {
+            border-left: 3px solid var(--spidey-neon-red);
+            transform: translateX(5px);
+        }
+        
+        .instruction-step:hover::after {
+            opacity: 1;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, var(--spidey-neon-red), var(--spidey-neon-blue));
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 0, 60, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .instruction-step:hover .step-number {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.7);
+        }
+        
+        /* High Scores Section */
+        .high-score-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        
+        .high-score-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: scale(1.02);
+        }
+        
+        /* FAQ Section */
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0, 1, 0, 1);
+            padding: 0 1rem;
+            opacity: 0;
+        }
+        
+        .faq-answer.active {
+            max-height: 1000px;
+            padding: 1rem;
+            opacity: 1;
+            transition: all 0.5s cubic-bezier(1, 0, 1, 0), opacity 0.3s 0.1s;
+        }
+        
+        /* Background City Sky Animation */
+        @keyframes citySky {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 100% 0%;
+            }
+        }
+        
+        .animated-sky {
+            background-size: 200% 100%;
+            animation: citySky 30s linear infinite alternate;
+        }
+        
+        /* Reveal Animation Classes */
+        .reveal {
+            position: relative;
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+        }
+        
+        .reveal-left {
+            transform: translateX(-50px);
+        }
+        
+        .reveal-right {
+            transform: translateX(50px);
+        }
+        
+        .reveal-up {
+            transform: translateY(50px);
+        }
+        
+        .reveal-down {
+            transform: translateY(-50px);
+        }
+        
+        .reveal.active {
+            transform: translateX(0) translateY(0);
+        }
+        
+        /* Navigation Animation */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--spidey-neon-red), var(--spidey-neon-blue));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Web Particles Animation */
+        #particles-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .game-container {
+                max-width: 400px;
+            }
+            .spiderman-3d-container {
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .game-container {
+                max-width: 320px;
+            }
+            .spiderman-3d-container {
+                height: 250px;
+            }
+        }
+        
+        /* 3D City Background for Game Section */
+        .city-3d-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    
+    <!-- Particles Background -->
+    <div id="particles-container"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 transition-all duration-300" id="mainNav">
+        <div class="container mx-auto px-4 md:px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="flex items-center">
+                    <span class="game-title text-3xl font-bold text-red-600 neon-text-red">SPIDEY&nbsp;<span class="neon-text-blue">SWING</span></span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-white hover:text-red-500 transition-colors text-lg">Home</a>
+                    <a href="#features" class="nav-link text-white hover:text-red-500 transition-colors text-lg">Features</a>
+                    <a href="#play" class="nav-link text-white hover:text-red-500 transition-colors text-lg">Play</a>
+                    <a href="#instructions" class="nav-link text-white hover:text-red-500 transition-colors text-lg">How To Play</a>
+                    <a href="#high-scores" class="nav-link text-white hover:text-red-500 transition-colors text-lg">Leaderboard</a>
+                    <a href="#about" class="nav-link text-white hover:text-red-500 transition-colors text-lg">About</a>
+                    <a href="#faq" class="nav-link text-white hover:text-red-500 transition-colors text-lg">FAQ</a>
+                </div>
+                <button id="menu-toggle" class="md:hidden text-white focus:outline-none glass-card p-2 rounded-lg">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 backdrop-filter backdrop-blur-lg bg-opacity-90">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#home" class="text-white hover:text-red-500 transition-colors py-2 nav-link">Home</a>
+                <a href="#features" class="text-white hover:text-red-500 transition-colors py-2 nav-link">Features</a>
+                <a href="#play" class="text-white hover:text-red-500 transition-colors py-2 nav-link">Play</a>
+                <a href="#instructions" class="text-white hover:text-red-500 transition-colors py-2 nav-link">How To Play</a>
+                <a href="#high-scores" class="text-white hover:text-red-500 transition-colors py-2 nav-link">Leaderboard</a>
+                <a href="#about" class="text-white hover:text-red-500 transition-colors py-2 nav-link">About</a>
+                <a href="#faq" class="text-white hover:text-red-500 transition-colors py-2 nav-link">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Parallax -->
+    <section id="home" class="parallax-container animated-sky" style="background: linear-gradient(135deg, #0a1128 0%, #1a237e 50%, #0a1128 100%);">
+        <div class="web-design web-animate absolute top-20 left-20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 100 100" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1">
+                <path d="M50 0 L50 100 M0 50 L100 50 M0 0 L100 100 M100 0 L0 100 M25 0 L50 50 M75 0 L50 50 M0 25 L50 50 M0 75 L50 50 M100 25 L50 50 M100 75 L50 50 M25 100 L50 50 M75 100 L50 50" />
+            </svg>
+        </div>
+        
+        <div class="web-design web-animate absolute bottom-20 right-20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 100 100" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1">
+                <path d="M50 0 L50 100 M0 50 L100 50 M0 0 L100 100 M100 0 L0 100 M25 0 L50 50 M75 0 L50 50 M0 25 L50 50 M0 75 L50 50 M100 25 L50 50 M100 75 L50 50 M25 100 L50 50 M75 100 L50 50" />
+            </svg>
+        </div>
+        
+        <!-- Parallax Layer 0: Stars/Background -->
+        <div class="parallax-layer layer-0" data-speed="0.1"></div>
+        
+        <!-- Parallax Layer 1: Far Buildings -->
+        <div class="parallax-layer layer-1" data-speed="0.2">
+            <div class="h-full w-full opacity-20">
+                <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="50" y="500" width="50" height="300" fill="#ffffff" />
+                    <rect x="150" y="400" width="70" height="400" fill="#ffffff" />
+                    <rect x="270" y="550" width="60" height="250" fill="#ffffff" />
+                    <rect x="380" y="450" width="80" height="350" fill="#ffffff" />
+                    <rect x="510" y="380" width="40" height="420" fill="#ffffff" />
+                    <rect x="600" y="500" width="65" height="300" fill="#ffffff" />
+                    <rect x="715" y="420" width="55" height="380" fill="#ffffff" />
+                    <rect x="820" y="480" width="75" height="320" fill="#ffffff" />
+                    <rect x="945" y="520" width="45" height="280" fill="#ffffff" />
+                    <rect x="1040" y="400" width="60" height="400" fill="#ffffff" />
+                    <rect x="1150" y="470" width="70" height="330" fill="#ffffff" />
+                    <rect x="1270" y="520" width="50" height="280" fill="#ffffff" />
+                    <rect x="1370" y="450" width="65" height="350" fill="#ffffff" />
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Parallax Layer 2: Middle Buildings -->
+        <div class="parallax-layer layer-2" data-speed="0.4">
+            <div class="h-full w-full opacity-30">
+                <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="450" width="80" height="350" fill="#ffffff" />
+                    <rect x="130" y="350" width="90" height="450" fill="#ffffff" />
+                    <rect x="260" y="400" width="70" height="400" fill="#ffffff" />
+                    <rect x="370" y="300" width="100" height="500" fill="#ffffff" />
+                    <rect x="510" y="380" width="60" height="420" fill="#ffffff" />
+                    <rect x="610" y="420" width="85" height="380" fill="#ffffff" />
+                    <rect x="735" y="320" width="65" height="480" fill="#ffffff" />
+                    <rect x="840" y="380" width="95" height="420" fill="#ffffff" />
+                    <rect x="975" y="420" width="55" height="380" fill="#ffffff" />
+                    <rect x="1070" y="350" width="80" height="450" fill="#ffffff" />
+                    <rect x="1190" y="400" width="90" height="400" fill="#ffffff" />
+                    <rect x="1320" y="420" width="60" height="380" fill="#ffffff" />
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Parallax Layer 3: Close Buildings -->
+        <div class="parallax-layer layer-3" data-speed="0.6">
+            <div class="h-full w-full opacity-50">
+                <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="30" y="300" width="100" height="500" fill="#ffffff" />
+                    <rect x="180" y="250" width="120" height="550" fill="#ffffff" />
+                    <rect x="350" y="350" width="90" height="450" fill="#ffffff" />
+                    <rect x="490" y="200" width="130" height="600" fill="#ffffff" />
+                    <rect x="670" y="280" width="80" height="520" fill="#ffffff" />
+                    <rect x="800" y="320" width="110" height="480" fill="#ffffff" />
+                    <rect x="960" y="220" width="95" height="580" fill="#ffffff" />
+                    <rect x="1105" y="280" width="115" height="520" fill="#ffffff" />
+                    <rect x="1270" y="320" width="85" height="480" fill="#ffffff" />
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Parallax Layer 4: Content -->
+        <div class="parallax-layer layer-4" data-speed="0.1">
+            <div class="container mx-auto px-4 md:px-6 h-full flex items-center">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="hero-content z-10 reveal reveal-left">
+                        <h1 class="game-title text-5xl md:text-7xl font-bold mb-4 text-red-600 neon-text-red">SPIDER-MAN<br><span class="neon-text-blue">WEB SWING 3D</span></h1>
+                        <p class="text-xl mb-8 text-gray-200">Experience the ultimate web-slinging adventure in stunning 3D! Swing through a dynamic cityscape with incredible graphics and immersive sound.</p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#play" class="btn-spidey btn-3d px-8 py-4 rounded-lg text-lg font-bold inline-block text-center">
+                                PLAY NOW
+                            </a>
+                            <a href="#instructions" class="glass-card hover:bg-gray-700 px-8 py-4 rounded-lg text-lg font-bold inline-block text-center transition-all">
+                                HOW TO PLAY
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="z-10 reveal reveal-right">
+                        <!-- 3D Spider-Man Model Container -->
+                        <div class="spiderman-3d-container relative">
+                            <!-- Fallback if 3D model doesn't load -->
+                            <div class="swing-animation absolute inset-0 flex items-center justify-center">
+                                <div class="relative w-64 h-64 mx-auto bg-red-600 rounded-full overflow-hidden shadow-xl" style="box-shadow: 0 0 30px rgba(230, 57, 70, 0.7);">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-48 h-48 bg-blue-900 rounded-full flex items-center justify-center">
+                                            <div class="relative">
+                                                <!-- Spider-Man styled icon created with CSS -->
+                                                <div class="w-32 h-32 bg-red-600 rounded-full relative flex items-center justify-center">
+                                                    <!-- Eyes -->
+                                                    <div class="absolute w-10 h-5 bg-white top-8 left-4 transform rotate-12 rounded-full"></div>
+                                                    <div class="absolute w-10 h-5 bg-white top-8 right-4 transform -rotate-12 rounded-full"></div>
+                                                    <!-- Web pattern -->
+                                                    <div class="absolute inset-0 opacity-30">
+                                                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M50 0 L50 100 M0 50 L100 50 M0 0 L100 100 M100 0 L0 100" stroke="white" stroke-width="1" fill="none" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 3D model will be rendered here by Three.js -->
+                            <canvas id="spiderman3dCanvas" class="absolute inset-0 w-full h-full"></canvas>
+                            
+                            <!-- Web Line -->
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 h-32 w-1 bg-white opacity-70" style="box-shadow: 0 0 5px #ffffff;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 z-0" style="background: radial-gradient(circle at center, #1a237e 0%, #0a1128 70%)"></div>
+        
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
+            <div class="text-center mb-16 reveal reveal-up">
+                <h2 class="section-title text-4xl font-bold mb-4 text-red-600 neon-text-red">GAME FEATURES</h2>
+                <p class="text-xl max-w-3xl mx-auto">Experience the thrill of web-slinging with our premium Spider-Man inspired game!</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="game-feature-card rounded-lg shadow-lg overflow-hidden reveal reveal-up" data-delay="0.1">
+                    <div class="p-6">
+                        <div class="text-red-500 text-4xl mb-4 feature-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">3D Controls</h3>
+                        <p class="text-gray-300">Intuitive one-tap controls with realistic 3D physics make it easy to play but challenging to master.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="game-feature-card rounded-lg shadow-lg overflow-hidden reveal reveal-up" data-delay="0.2">
+                    <div class="p-6">
+                        <div class="text-blue-500 text-4xl mb-4 feature-icon">
+                            <i class="fas fa-city"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Dynamic Cityscape</h3>
+                        <p class="text-gray-300">Swing through a procedurally generated 3D city with realistic lighting and building patterns.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="game-feature-card rounded-lg shadow-lg overflow-hidden reveal reveal-up" data-delay="0.3">
+                    <div class="p-6">
+                        <div class="text-yellow-500 text-4xl mb-4 feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Global Leaderboard</h3>
+                        <p class="text-gray-300">Compete against yourself and others to achieve the highest score and rise up the ranks.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="game-feature-card rounded-lg shadow-lg overflow-hidden reveal reveal-up" data-delay="0.4">
+                    <div class="p-6">
+                        <div class="text-green-500 text-4xl mb-4 feature-icon">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Immersive Sound</h3>
+                        <p class="text-gray-300">Enjoy high-quality custom sound effects and music that enhance the web-slinging experience.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="game-feature-card rounded-lg shadow-lg overflow-hidden reveal reveal-up" data-delay="0.5">
+                    <div class="p-6">
+                        <div class="text-purple-500 text-4xl mb-4 feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Cross-Device Play</h3>
+                        <p class="text-gray-300">Play on any device with the same great experience - desktop, tablet, or mobile phone.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="game-feature-card rounded-lg shadow-lg overflow-hidden reveal reveal-up" data-delay="0.6">
+                    <div class="p-6">
+                        <div class="text-pink-500 text-4xl mb-4 feature-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Progressive Difficulty</h3>
+                        <p class="text-gray-300">The game gets progressively faster and more challenging as you achieve higher scores.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Play Section -->
+    <section id="instructions" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                <pattern id="pattern-web" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M20 0 L20 40 M0 20 L40 20 M0 0 L40 40 M40 0 L0 40" stroke="#ffffff" stroke-width="0.5" fill="none" />
+                </pattern>
+                <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-web)" />
+            </svg>
+        </div>
+        
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
+            <div class="text-center mb-12 reveal reveal-up">
+                <h2 class="section-title text-4xl font-bold mb-4 text-red-600 neon-text-blue">HOW TO PLAY</h2>
+                <p class="text-xl max-w-3xl mx-auto mb-8">Master the art of web-slinging with these simple instructions!</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="instruction-step glass-card p-6 rounded-lg shadow-lg reveal reveal-left" data-delay="0.1">
+                    <div class="text-red-500 text-5xl mb-4 flex justify-center">
+                        <span class="step-number w-12 h-12 rounded-full flex items-center justify-center">1</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-center">Click or Tap</h3>
+                    <p class="text-gray-300">Use your mouse or tap the screen to make Spider-Man shoot webs and swing higher. Perfect your timing for maximum height!</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="instruction-step glass-card p-6 rounded-lg shadow-lg reveal reveal-up" data-delay="0.2">
+                    <div class="text-blue-500 text-5xl mb-4 flex justify-center">
+                        <span class="step-number w-12 h-12 rounded-full flex items-center justify-center">2</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-center">Navigate Buildings</h3>
+                    <p class="text-gray-300">Swing between 3D skyscrapers and avoid obstacles. Time your swings to pass through gaps in the city skyline!</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="instruction-step glass-card p-6 rounded-lg shadow-lg reveal reveal-right" data-delay="0.3">
+                    <div class="text-yellow-500 text-5xl mb-4 flex justify-center">
+                        <span class="step-number w-12 h-12 rounded-full flex items-center justify-center">3</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-center">Beat Your Score</h3>
+                    <p class="text-gray-300">Each building you pass adds to your score. Try to beat your personal best and climb the global leaderboard!</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 glass-card p-6 rounded-lg shadow-lg reveal reveal-up" data-delay="0.4">
+                <h3 class="text-xl font-bold mb-4"><i class="fas fa-lightbulb text-yellow-400 mr-2"></i> Pro Tips</h3>
+                <ul class="list-disc pl-6 space-y-2 text-gray-300">
+                    <li>Time your swings just after passing a building for maximum momentum</li>
+                    <li>Watch for patterns in the building layouts to anticipate gaps</li>
+                    <li>Short, controlled swings are often better than big jumps</li>
+                    <li>For higher scores, maintain a steady rhythm rather than erratic movements</li>
+                    <li>Practice makes perfect - the more you play, the better you'll get!</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Section -->
+    <section id="play" class="py-20 relative overflow-hidden">
+        <div class="city-3d-container" id="cityBackground"></div>
+        
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
+            <div class="text-center mb-12 reveal reveal-up">
+                <h2 class="section-title text-4xl font-bold mb-4 text-red-600 neon-text-red">PLAY NOW</h2>
+                <p class="text-xl max-w-3xl mx-auto mb-8">Test your reflexes and see how far you can swing through the 3D city!</p>
+            </div>
+            
+            <div class="game-container neon-box reveal reveal-up" data-delay="0.2">
+                <canvas id="gameCanvas" width="400" height="600"></canvas>
+                <div id="startScreen" class="overlay">
+                    <h2 class="text-4xl font-bold text-red-600 neon-text-red mb-4">Spider-Man Web Swing 3D</h2>
+                    <p class="text-xl mb-2">Navigate through the 3D buildings</p>
+                    <p class="text-lg mb-4">Click or tap to make Spider-Man swing up</p>
+                    <button id="startButton" class="btn-spidey btn-3d px-6 py-3 rounded-lg text-lg">Start Game</button>
+                </div>
+                <div id="gameOverScreen" class="overlay hidden">
+                    <h2 class="text-4xl font-bold text-red-600 neon-text-red mb-4">Game Over!</h2>
+                    <p id="finalScore" class="text-2xl mb-4">Score: 0</p>
+                    <p id="newHighScore" class="text-xl text-yellow-400 neon-text-blue mb-4 hidden">New High Score!</p>
+                    <button id="restartButton" class="btn-spidey btn-3d px-6 py-3 rounded-lg text-lg">Play Again</button>
+                </div>
+                <div id="scoreDisplay" class="score">Score: 0</div>
+                <div class="controls">
+                    <button id="soundToggle" class="sound-toggle">
+                        <i id="soundIcon" class="fas fa-volume-up"></i>
+                    </button>
+                    <button id="musicToggle" class="sound-toggle">
+                        <i id="musicIcon" class="fas fa-music"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- High Scores Section -->
+    <section id="high-scores" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 z-0" style="background: radial-gradient(circle at center, #1a237e 0%, #0a1128 70%)"></div>
+        
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
+            <div class="text-center mb-12 reveal reveal-up">
+                <h2 class="section-title text-4xl font-bold mb-4 text-red-600 neon-text-blue">LEADERBOARD</h2>
+                <p class="text-xl max-w-3xl mx-auto">See how your web-slinging skills stack up against the competition!</p>
+            </div>
+            
+            <div class="glass-card rounded-lg shadow-lg p-6 max-w-xl mx-auto reveal reveal-up" data-delay="0.2">
+                <div class="flex justify-between font-bold text-red-500 mb-4 px-4 py-2 border-b border-gray-700">
+                    <span class="neon-text-red">RANK</span>
+                    <span>SCORE</span>
+                    <span>DATE</span>
+                </div>
+                <div id="highScoresList" class="space-y-2">
+                    <!-- High scores will be populated here by JavaScript -->
+                    <div class="high-score-item flex justify-between p-4">
+                        <span class="font-bold">-</span>
+                        <span>-</span>
+                        <span class="text-gray-400">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                <pattern id="pattern-web-2" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M20 0 L20 40 M0 20 L40 20 M0 0 L40 40 M40 0 L0 40" stroke="#ffffff" stroke-width="0.5" fill="none" />
+                </pattern>
+                <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-web-2)" />
+            </svg>
+        </div>
+        
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
+            <div class="text-center mb-12 reveal reveal-up">
+                <h2 class="section-title text-4xl font-bold mb-4 text-red-600 neon-text-red">FREQUENTLY ASKED QUESTIONS</h2>
+                <p class="text-xl max-w-3xl mx-auto">Everything you need to know about Spider-Man Web Swing 3D</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto glass-card rounded-lg shadow-lg overflow-hidden reveal reveal-up" data-delay="0.2">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-faq="1">
+                        <h3 class="font-bold">Is this game free to play?</h3>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer" id="faq-1">
+                        <p>Yes, Spider-Man Web Swing 3D is completely free to play. There are no in-app purchases or hidden costs.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-faq="2">
+                        <h3 class="font-bold">What devices can I play on?</h3>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer" id="faq-2">
+                        <p>You can play on any device with a modern web browser - desktop computers, laptops, tablets, and smartphones are all supported. For the best 3D experience, we recommend using a device with good graphics capabilities.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-faq="3">
+                        <h3 class="font-bold">Is this an official Spider-Man game?</h3>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer" id="faq-3">
+                        <p>No, this is a fan-made game inspired by Spider-Man. It is not affiliated with Marvel, Sony, or any official Spider-Man franchise.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-faq="4">
+                        <h3 class="font-bold">Why isn't the sound working?</h3>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer" id="faq-4">
+                        <p>Make sure your device isn't muted and that you've clicked the sound toggle button in the game. Some browsers may also require a user interaction before allowing sound to play.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-faq="5">
+                        <h3 class="font-bold">Are my high scores saved?</h3>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer" id="faq-5">
+                        <p>Yes, your high scores are saved locally on your device. They will persist between gaming sessions as long as you use the same browser and don't clear your browser data.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 z-0" style="background: radial-gradient(circle at center, #1a237e 0%, #0a1128 70%)"></div>
+        
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
+            <div class="text-center mb-12 reveal reveal-up">
+                <h2 class="section-title text-4xl font-bold mb-4 text-red-600 neon-text-blue">ABOUT THE CREATOR</h2>
+                <p class="text-xl max-w-3xl mx-auto">The story behind Spider-Man Web Swing 3D and the passion for web-slinging adventure!</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center glass-card rounded-lg shadow-lg overflow-hidden reveal reveal-up" data-delay="0.2">
+                <div class="md:w-1/3 p-8 flex justify-center">
+                    <div class="relative w-48 h-48 rounded-full overflow-hidden neon-box">
+                        <div class="absolute inset-0 flex items-center justify-center bg-gray-800">
+                            <i class="fas fa-user text-8xl text-gray-600"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-2/3 p-8">
+                    <h3 class="text-2xl font-bold mb-4 neon-text-red">The Web Developer</h3>
+                    <p class="mb-4">As a passionate fan of Spider-Man and web development, I created this game to combine my love for both worlds. Spider-Man Web Swing 3D elevates the classic web-slinging experience with modern 3D graphics and immersive gameplay.</p>
+                    <p class="mb-4">My goal was to create a visually stunning yet accessible game that captures the thrill of swinging through New York's skyline. The game is constantly evolving with new features and improvements.</p>
+                    <p>Thank you for playing Spider-Man Web Swing 3D! I hope you enjoy the 3D web-slinging experience as much as I enjoyed creating it. Feel free to share your feedback and suggestions for future updates!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 relative overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-30">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                <pattern id="pattern-web-3" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M20 0 L20 40 M0 20 L40 20 M0 0 L40 40 M40 0 L0 40" stroke="#ffffff" stroke-width="0.5" fill="none" />
+                </pattern>
+                <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-web-3)" />
+            </svg>
+        </div>
+        
+        <div class="container mx-auto px-4 md:px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <span class="game-title text-3xl font-bold text-red-600 neon-text-red">SPIDEY&nbsp;<span class="neon-text-blue">SWING</span></span>
+                    <p class="mt-2 text-gray-400">© 2023 All Rights Reserved</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <i class="fab fa-twitter text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <i class="fab fa-facebook text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <i class="fab fa-instagram text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <i class="fab fa-github text-2xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-gray-500 text-sm">
+                <p>This game is a fan-made project and is not affiliated with Marvel, Sony, or any Spider-Man franchise.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Audio Elements -->
+    <audio id="jumpSound" preload="auto">
+        <source src="https://cdn1.genspark.ai/user-upload-image/2/14154e22-b421-4a97-ab5c-15e05e6d86c5.mp3" type="audio/mp3">
+    </audio>
+    <audio id="scoreSound" preload="auto">
+        <source src="https://cdn1.genspark.ai/user-upload-image/2/a82d8c55-70c6-43ef-b936-4149cabde541.mp3" type="audio/mp3">
+    </audio>
+    <audio id="gameOverSound" preload="auto">
+        <source src="https://cdn1.genspark.ai/user-upload-image/2/0dfd1ca4-09c7-407d-a390-6dca48e9e27d.mp3" type="audio/mp3">
+    </audio>
+    <audio id="restartSound" preload="auto">
+        <source src="https://cdn1.genspark.ai/user-upload-image/2/14d39987-1474-483f-86b1-476a96c87bbe.mp3" type="audio/mp3">
+    </audio>
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="https://cdn1.genspark.ai/user-upload-image/3/337a87f5-087e-4513-9c73-f5cbd3fff299.mp3" type="audio/mp3">
+    </audio>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Custom Cursor
+            const cursor = document.querySelector('.cursor');
+            const cursorFollower = document.querySelector('.cursor-follower');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            });
+            
+            document.addEventListener('mousedown', () => {
+                cursor.classList.add('active');
+                cursorFollower.classList.add('active');
+            });
+            
+            document.addEventListener('mouseup', () => {
+                cursor.classList.remove('active');
+                cursorFollower.classList.remove('active');
+            });
+            
+            // Add hover effect to all buttons and clickable elements
+            const clickables = document.querySelectorAll('a, button, .faq-question, .sound-toggle');
+            
+            clickables.forEach((el) => {
+                el.addEventListener('mouseover', () => {
+                    cursor.classList.add('active');
+                    cursorFollower.classList.add('active');
+                });
+                
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('active');
+                    cursorFollower.classList.remove('active');
+                });
+            });
+            
+            // Initialize Parallax Effect
+            const parallaxLayers = document.querySelectorAll('.parallax-layer');
+            
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                
+                parallaxLayers.forEach((layer) => {
+                    const speed = layer.getAttribute('data-speed') || 0;
+                    const yPos = -(scrollY * speed);
+                    layer.style.transform = `translateY(${yPos}px)`;
+                });
+            });
+            
+            // Initialize Particles.js
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-container', {
+                    "particles": {
+                        "number": {
+                            "value": 80,
+                            "density": {
+                                "enable": true,
+                                "value_area": 800
+                            }
+                        },
+                        "color": {
+                            "value": "#ffffff"
+                        },
+                        "shape": {
+                            "type": "circle",
+                            "stroke": {
+                                "width": 0,
+                                "color": "#000000"
+                            },
+                            "polygon": {
+                                "nb_sides": 5
+                            }
+                        },
+                        "opacity": {
+                            "value": 0.2,
+                            "random": true,
+                            "anim": {
+                                "enable": true,
+                                "speed": 1,
+                                "opacity_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "size": {
+                            "value": 3,
+                            "random": true,
+                            "anim": {
+                                "enable": false,
+                                "speed": 40,
+                                "size_min": 0.1,
+                                "sync": false
+                            }
+                        },
+                        "line_linked": {
+                            "enable": true,
+                            "distance": 150,
+                            "color": "#ffffff",
+                            "opacity": 0.1,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 2,
+                            "direction": "none",
+                            "random": false,
+                            "straight": false,
+                            "out_mode": "out",
+                            "bounce": false,
+                            "attract": {
+                                "enable": false,
+                                "rotateX": 600,
+                                "rotateY": 1200
+                            }
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": true,
+                                "mode": "grab"
+                            },
+                            "onclick": {
+                                "enable": true,
+                                "mode": "push"
+                            },
+                            "resize": true
+                        },
+                        "modes": {
+                            "grab": {
+                                "distance": 140,
+                                "line_linked": {
+                                    "opacity": 0.5
+                                }
+                            },
+                            "bubble": {
+                                "distance": 400,
+                                "size": 40,
+                                "duration": 2,
+                                "opacity": 8,
+                                "speed": 3
+                            },
+                            "repulse": {
+                                "distance": 200,
+                                "duration": 0.4
+                            },
+                            "push": {
+                                "particles_nb": 4
+                            },
+                            "remove": {
+                                "particles_nb": 2
+                            }
+                        }
+                    },
+                    "retina_detect": true
+                });
+            }
+            
+            // Initialize 3D Spider-Man Model
+            initSpiderman3D();
+            
+            // Initialize 3D City Background
+            initCityBackground();
+            
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Close mobile menu when clicking a link
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+            
+            // Scroll Reveal Animation
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            function checkReveal() {
+                const windowHeight = window.innerHeight;
+                const revealPoint = 150;
+                
+                revealElements.forEach(element => {
+                    const revealTop = element.getBoundingClientRect().top;
+                    const delay = element.getAttribute('data-delay') || 0;
+                    
+                    if (revealTop < windowHeight - revealPoint) {
+                        setTimeout(() => {
+                            element.classList.add('active');
+                        }, delay * 1000);
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', checkReveal);
+            window.addEventListener('load', checkReveal);
+            
+            // Sticky Navigation
+            const mainNav = document.getElementById('mainNav');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    mainNav.classList.add('bg-gray-900', 'bg-opacity-90', 'backdrop-filter', 'backdrop-blur-lg', 'shadow-lg');
+                } else {
+                    mainNav.classList.remove('bg-gray-900', 'bg-opacity-90', 'backdrop-filter', 'backdrop-blur-lg', 'shadow-lg');
+                }
+            });
+            
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const faqId = question.getAttribute('data-faq');
+                    const answer = document.getElementById(`faq-${faqId}`);
+                    const icon = question.querySelector('i');
+                    
+                    // Close all other FAQ items
+                    document.querySelectorAll('.faq-answer').forEach(item => {
+                        if (item.id !== `faq-${faqId}`) {
+                            item.classList.remove('active');
+                            item.previousElementSibling.querySelector('i').style.transform = 'rotate(0)';
+                        }
+                    });
+                    
+                    // Toggle answer visibility
+                    answer.classList.toggle('active');
+                    
+                    // Toggle icon rotation
+                    if (answer.classList.contains('active')) {
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        icon.style.transform = 'rotate(0)';
+                    }
+                });
+            });
+            
+            // Game Elements
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            const startScreen = document.getElementById('startScreen');
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            const startButton = document.getElementById('startButton');
+            const restartButton = document.getElementById('restartButton');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const finalScore = document.getElementById('finalScore');
+            const newHighScoreText = document.getElementById('newHighScore');
+            const soundToggle = document.getElementById('soundToggle');
+            const soundIcon = document.getElementById('soundIcon');
+            const musicToggle = document.getElementById('musicToggle');
+            const musicIcon = document.getElementById('musicIcon');
+            
+            // Audio Context for improved sound handling
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            let audioContext;
+            
+            // Sound Elements
+            const jumpSound = document.getElementById('jumpSound');
+            const scoreSound = document.getElementById('scoreSound');
+            const gameOverSound = document.getElementById('gameOverSound');
+            const restartSound = document.getElementById('restartSound');
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            
+            // Sound settings
+            let soundEnabled = true;
+            let musicEnabled = true;
+            
+            // Initialize audio system
+            function initializeAudio() {
+                if (!audioContext) {
+                    audioContext = new AudioContext();
+                }
+                
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                
+                // Preload sounds
+                const sounds = [jumpSound, scoreSound, gameOverSound, restartSound, backgroundMusic];
+                sounds.forEach(sound => {
+                    sound.load();
+                });
+                
+                // Set initial volume for background music
+                backgroundMusic.volume = 0.4;
+                jumpSound.volume = 0.7;
+                scoreSound.volume = 0.7;
+                gameOverSound.volume = 0.7;
+                restartSound.volume = 0.7;
+            }
+            
+            // Sound toggle function
+            soundToggle.addEventListener('click', () => {
+                soundEnabled = !soundEnabled;
+                if (soundEnabled) {
+                    soundIcon.className = 'fas fa-volume-up';
+                    // Play a test sound to ensure audio works
+                    playSound(scoreSound);
+                } else {
+                    soundIcon.className = 'fas fa-volume-mute';
+                }
+            });
+            
+            // Music toggle function
+            musicToggle.addEventListener('click', () => {
+                musicEnabled = !musicEnabled;
+                if (musicEnabled) {
+                    musicIcon.className = 'fas fa-music';
+                    if (gameRunning) {
+                        backgroundMusic.play().catch(e => console.warn("Background music error:", e));
+                    }
+                } else {
+                    musicIcon.className = 'fas fa-music-slash';
+                    backgroundMusic.pause();
+                }
+            });
+            
+            // Improved sound playback function
+            function playSound(sound) {
+                if (soundEnabled) {
+                    // Reset the sound to start
+                    sound.currentTime = 0;
+                    
+                    // Create a promise to handle sound playing
+                    const playPromise = sound.play();
+                    
+                    // Handle potential play() rejection (common in some browsers)
+                    if (playPromise !== undefined) {
+                        playPromise.then(_ => {
+                            // Playback started successfully
+                        }).catch(error => {
+                            console.warn("Audio play error:", error);
+                            // Auto-retry once
+                            setTimeout(() => {
+                                sound.play().catch(e => console.warn("Retry failed:", e));
+                            }, 50);
+                        });
+                    }
+                }
+            }
+            
+            // Handle background music
+            function toggleBackgroundMusic() {
+                if (musicEnabled && gameRunning) {
+                    backgroundMusic.play().catch(e => console.warn("Background music error:", e));
+                } else {
+                    backgroundMusic.pause();
+                }
+            }
+            
+            // Game settings
+            const gravity = 0.5;
+            const jumpStrength = -8;
+            let gameSpeed = 3;
+            const speedIncrease = 0.0003;
+            
+            // Game state
+            let gameRunning = false;
+            let score = 0;
+            let highScores = JSON.parse(localStorage.getItem('spideySwingHighScores')) || [];
+            
+            // Initialize high scores if empty
+            if (highScores.length === 0) {
+                highScores = [
+                    { score: 10, date: '2023-01-01' },
+                    { score: 8, date: '2023-01-02' },
+                    { score: 5, date: '2023-01-03' }
+                ];
+                localStorage.setItem('spideySwingHighScores', JSON.stringify(highScores));
+            }
+            
+            // Update high scores list
+            function updateHighScoresList() {
+                const highScoresList = document.getElementById('highScoresList');
+                highScoresList.innerHTML = '';
+                
+                if (highScores.length === 0) {
+                    const emptyItem = document.createElement('div');
+                    emptyItem.className = 'high-score-item flex justify-between p-4';
+                    emptyItem.innerHTML = `
+                        <span class="font-bold">-</span>
+                        <span>No scores yet</span>
+                        <span class="text-gray-400">-</span>
+                    `;
+                    highScoresList.appendChild(emptyItem);
+                    return;
+                }
+                
+                // Sort high scores
+                highScores.sort((a, b) => b.score - a.score);
+                
+                // Only keep top 10
+                highScores = highScores.slice(0, 10);
+                
+                // Display high scores
+                highScores.forEach((scoreItem, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'high-score-item flex justify-between p-4';
+                    
+                    // Add special styling for top 3
+                    let rankDisplay = `<span class="font-bold">${index + 1}</span>`;
+                    if (index === 0) {
+                        rankDisplay = `<span class="font-bold text-yellow-400 neon-text-blue"><i class="fas fa-trophy"></i> ${index + 1}</span>`;
+                    } else if (index === 1) {
+                        rankDisplay = `<span class="font-bold text-gray-400"><i class="fas fa-trophy"></i> ${index + 1}</span>`;
+                    } else if (index === 2) {
+                        rankDisplay = `<span class="font-bold text-yellow-800"><i class="fas fa-trophy"></i> ${index + 1}</span>`;
+                    }
+                    
+                    item.innerHTML = `
+                        ${rankDisplay}
+                        <span>${scoreItem.score}</span>
+                        <span class="text-gray-400">${formatDate(scoreItem.date)}</span>
+                    `;
+                    highScoresList.appendChild(item);
+                });
+            }
+            
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString();
+            }
+            
+            // Spiderman character with 3D-style drawing
+            const spiderman = {
+                x: 50,
+                y: canvas.height / 2,
+                width: 30,
+                height: 30,
+                velocity: 0,
+                rotation: 0,
+                webLength: 0,
+                webAngle: 0,
+                webAttached: false,
+                webAttachX: 0,
+                webAttachY: 0,
+                jump: function() {
+                    this.velocity = jumpStrength;
+                    this.webAttached = false;
+                    playSound(jumpSound);
+                },
+                update: function() {
+                    this.velocity += gravity;
+                    this.y += this.velocity;
+                    
+                    // Rotate based on velocity
+                    this.rotation = this.velocity * 2;
+                    
+                    // Keep Spiderman within the canvas
+                    if (this.y < 0) {
+                        this.y = 0;
+                        this.velocity = 0;
+                    }
+                    if (this.y + this.height > canvas.height) {
+                        gameOver();
+                    }
+                    
+                    // Generate a web line
+                    if (!this.webAttached && this.velocity < 0) {
+                        this.webAttached = true;
+                        this.webAttachX = Math.max(0, this.x - 50 - Math.random() * 60);
+                        this.webAttachY = Math.max(0, this.y - 80 - Math.random() * 40);
+                    } else if (this.velocity > 2) {
+                        this.webAttached = false;
+                    }
+                },
+                draw: function() {
+                    // Save the current context state
+                    ctx.save();
+                    
+                    // Translate to the center of Spider-Man
+                    ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+                    
+                    // Rotate based on velocity
+                    ctx.rotate(this.rotation * Math.PI / 180);
+                    
+                    // Draw Spider-Man (enhanced with 3D-like shading)
+                    
+                    // Body shadow
+                    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                    ctx.fillRect(-this.width / 2 + 2, -this.height / 2 + 2, this.width, this.height);
+                    
+                    // Main body
+                    ctx.fillStyle = '#e63946';
+                    ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
+                    
+                    // Web pattern on body
+                    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(-this.width / 2, -this.height / 2);
+                    ctx.lineTo(this.width / 2, this.height / 2);
+                    ctx.moveTo(this.width / 2, -this.height / 2);
+                    ctx.lineTo(-this.width / 2, this.height / 2);
+                    ctx.stroke();
+                    
+                    // Spiderman mask details (white eyes with 3D effect)
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(-this.width / 2 + 5, -this.height / 2 + 8, 7, 5);
+                    ctx.fillRect(this.width / 2 - 12, -this.height / 2 + 8, 7, 5);
+                    
+                    // Eye shadow for 3D effect
+                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                    ctx.fillRect(-this.width / 2 + 6, -this.height / 2 + 9, 5, 3);
+                    ctx.fillRect(this.width / 2 - 11, -this.height / 2 + 9, 5, 3);
+                    
+                    // Restore the context
+                    ctx.restore();
+                    
+                    // Draw web line
+                    if (this.webAttached && this.velocity < 4) {
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(this.x + this.width / 2, this.y);
+                        ctx.lineTo(this.webAttachX, this.webAttachY);
+                        ctx.stroke();
+                        
+                        // Add web shine
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                        ctx.lineWidth = 4;
+                        ctx.globalCompositeOperation = 'lighter';
+                        ctx.beginPath();
+                        ctx.moveTo(this.x + this.width / 2, this.y);
+                        ctx.lineTo(this.webAttachX, this.webAttachY);
+                        ctx.stroke();
+                        ctx.globalCompositeOperation = 'source-over';
+                    }
+                }
+            };
+            
+            // Building obstacles with 3D effect
+            let buildings = [];
+            const buildingWidth = 60;
+            const gapHeight = 130;
+            const buildingSpacing = 200;
+            const minGapTop = 50;
+            
+            function createBuilding() {
+                const gapTop = Math.floor(Math.random() * (canvas.height - gapHeight - minGapTop * 2)) + minGapTop;
+                
+                // Random building texture/color
+                const colorScheme = Math.floor(Math.random() * 3);
+                let mainColor, windowColor, edgeColor;
+                
+                switch(colorScheme) {
+                    case 0: // Blue/glass buildings
+                        mainColor = '#2c3e50';
+                        windowColor = '#3498db';
+                        edgeColor = '#34495e';
+                        break;
+                    case 1: // Gray/concrete buildings
+                        mainColor = '#7f8c8d';
+                        windowColor = '#f1c40f';
+                        edgeColor = '#95a5a6';
+                        break;
+                    case 2: // Dark/night buildings
+                        mainColor = '#2c3e50';
+                        windowColor = '#e74c3c';
+                        edgeColor = '#34495e';
+                        break;
+                }
+                
+                buildings.push({
+                    x: canvas.width,
+                    width: buildingWidth,
+                    topHeight: gapTop,
+                    bottomHeight: canvas.height - gapTop - gapHeight,
+                    passed: false,
+                    mainColor,
+                    windowColor,
+                    edgeColor,
+                    windowPattern: Math.floor(Math.random() * 3) // Different window patterns
+                });
+            }
+            
+            function updateBuildings() {
+                for (let i = 0; i < buildings.length; i++) {
+                    buildings[i].x -= gameSpeed;
+                    
+                    // Check if Spiderman passed the building
+                    if (!buildings[i].passed && buildings[i].x + buildings[i].width < spiderman.x) {
+                        buildings[i].passed = true;
+                        score++;
+                        scoreDisplay.textContent = `Score: ${score}`;
+                        playSound(scoreSound);
+                    }
+                    
+                    // Check for collision
+                    if (checkCollision(buildings[i])) {
+                        gameOver();
+                    }
+                    
+                    // Remove buildings that are off-screen
+                    if (buildings[i].x + buildings[i].width < 0) {
+                        buildings.splice(i, 1);
+                        i--;
+                    }
+                }
+                
+                // Add new buildings
+                const lastBuilding = buildings[buildings.length - 1];
+                if (!lastBuilding || canvas.width - (lastBuilding.x + lastBuilding.width) > buildingSpacing) {
+                    createBuilding();
+                }
+            }
+            
+            function drawBuildings() {
+                buildings.forEach(building => {
+                    // 3D effect for top building
+                    drawBuildingWith3DEffect(building.x, 0, building.width, building.topHeight, building.mainColor, building.windowColor, building.edgeColor, building.windowPattern);
+                    
+                    // 3D effect for bottom building
+                    drawBuildingWith3DEffect(building.x, canvas.height - building.bottomHeight, building.width, building.bottomHeight, building.mainColor, building.windowColor, building.edgeColor, building.windowPattern);
+                });
+            }
+            
+            function drawBuildingWith3DEffect(x, y, width, height, mainColor, windowColor, edgeColor, pattern) {
+                // Main building face
+                ctx.fillStyle = mainColor;
+                ctx.fillRect(x, y, width, height);
+                
+                // Side edge for 3D effect
+                ctx.fillStyle = edgeColor;
+                ctx.beginPath();
+                ctx.moveTo(x + width, y);
+                ctx.lineTo(x + width + 10, y + 10);
+                ctx.lineTo(x + width + 10, y + height + 10);
+                ctx.lineTo(x + width, y + height);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Top edge for 3D effect (if visible)
+                if (y > 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + 10, y + 10);
+                    ctx.lineTo(x + width + 10, y + 10);
+                    ctx.lineTo(x + width, y);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+                
+                // Windows
+                ctx.fillStyle = windowColor;
+                
+                // Different window patterns
+                switch(pattern) {
+                    case 0: // Grid pattern
+                        for (let i = 10; i < height - 10; i += 20) {
+                            for (let j = 10; j < width - 10; j += 20) {
+                                if (Math.random() > 0.3) { // Some windows are dark
+                                    ctx.fillRect(x + j, y + i, 8, 8);
+                                }
+                            }
+                        }
+                        break;
+                    case 1: // Vertical strips
+                        for (let j = 10; j < width - 10; j += 20) {
+                            for (let i = 10; i < height - 10; i += 15) {
+                                if (Math.random() > 0.2) {
+                                    ctx.fillRect(x + j, y + i, 10, 5);
+                                }
+                            }
+                        }
+                        break;
+                    case 2: // Horizontal strips
+                        for (let i = 15; i < height - 10; i += 25) {
+                            for (let j = 5; j < width - 5; j += 12) {
+                                if (Math.random() > 0.1) {
+                                    ctx.fillRect(x + j, y + i, 8, 10);
+                                }
+                            }
+                        }
+                        break;
+                }
+                
+                // Window glow effect
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                for (let i = 10; i < height - 10; i += 40) {
+                    for (let j = 10; j < width - 10; j += 40) {
+                        if (Math.random() > 0.7) {
+                            ctx.beginPath();
+                            ctx.arc(x + j + 4, y + i + 4, Math.random() * 8 + 2, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
+            }
+            
+            function checkCollision(building) {
+                // Collision with top building
+                if (spiderman.x + spiderman.width > building.x && 
+                    spiderman.x < building.x + building.width && 
+                    spiderman.y < building.topHeight) {
+                    return true;
+                }
+                
+                // Collision with bottom building
+                if (spiderman.x + spiderman.width > building.x && 
+                    spiderman.x < building.x + building.width && 
+                    spiderman.y + spiderman.height > canvas.height - building.bottomHeight) {
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            // Draw background elements
+            function drawBackground() {
+                // Sky gradient
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#0f2027');
+                gradient.addColorStop(0.5, '#203a43');
+                gradient.addColorStop(1, '#2c5364');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Stars
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                for (let i = 0; i < 50; i++) {
+                    const size = Math.random() * 2;
+                    ctx.beginPath();
+                    ctx.arc(
+                        Math.random() * canvas.width,
+                        Math.random() * canvas.height * 0.7,
+                        size,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+                
+                // Moon
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.beginPath();
+                ctx.arc(canvas.width - 50, 50, 30, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Moon crater
+                ctx.fillStyle = 'rgba(200, 200, 200, 0.8)';
+                ctx.beginPath();
+                ctx.arc(canvas.width - 60, 40, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Distant city silhouette
+                ctx.fillStyle = '#1a1a2e';
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height);
+                
+                for (let i = 0; i < canvas.width; i += 30) {
+                    const height = 50 + Math.random() * 30;
+                    ctx.lineTo(i, canvas.height - height);
+                    ctx.lineTo(i + 15, canvas.height - height - Math.random() * 20);
+                    ctx.lineTo(i + 30, canvas.height - height);
+                }
+                
+                ctx.lineTo(canvas.width, canvas.height);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            // Game loop
+            function gameLoop() {
+                if (!gameRunning) return;
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Increase game speed over time
+                gameSpeed += speedIncrease;
+                
+                // Draw background
+                drawBackground();
+                
+                // Update and draw Spiderman
+                spiderman.update();
+                
+                // Update and draw buildings
+                updateBuildings();
+                drawBuildings();
+                
+                // Draw Spiderman after buildings
+                spiderman.draw();
+                
+                // Request next frame
+                requestAnimationFrame(gameLoop);
+            }
+            
+            // Game control functions
+            function startGame() {
+                // Initialize audio on first user interaction
+                initializeAudio();
+                
+                gameRunning = true;
+                score = 0;
+                gameSpeed = 3;
+                buildings = [];
+                spiderman.y = canvas.height / 2;
+                spiderman.velocity = 0;
+                spiderman.webAttached = false;
+                
+                startScreen.classList.add('hidden');
+                gameOverScreen.classList.add('hidden');
+                newHighScoreText.classList.add('hidden');
+                scoreDisplay.textContent = `Score: ${score}`;
+                
+                // Start background music if enabled
+                if (musicEnabled) {
+                    backgroundMusic.play().catch(e => console.warn("Background music error:", e));
+                }
+                
+                // Start the game loop
+                gameLoop();
+                
+                // Track event if Google Analytics is available
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'game_start', {
+                        'event_category': 'Game',
+                        'event_label': 'Game Started'
+                    });
+                }
+            }
+            
+            function gameOver() {
+                gameRunning = false;
+                finalScore.textContent = `Score: ${score}`;
+                playSound(gameOverSound);
+                backgroundMusic.pause();
+                
+                // Check for high score
+                let isNewHighScore = false;
+                if (highScores.length < 10 || score > highScores[highScores.length - 1].score) {
+                    // Add new score to high scores
+                    highScores.push({
+                        score: score,
+                        date: new Date().toISOString().split('T')[0]
+                    });
+                    
+                    // Sort and trim high scores
+                    highScores.sort((a, b) => b.score - a.score);
+                    if (highScores.length > 10) {
+                        highScores = highScores.slice(0, 10);
+                    }
+                    
+                    // Save to local storage
+                    localStorage.setItem('spideySwingHighScores', JSON.stringify(highScores));
+                    
+                    // Update high scores list
+                    updateHighScoresList();
+                    
+                    // Check if it's the top score
+                    if (score === highScores[0].score) {
+                        isNewHighScore = true;
+                    }
+                }
+                
+                if (isNewHighScore) {
+                    newHighScoreText.classList.remove('hidden');
+                } else {
+                    newHighScoreText.classList.add('hidden');
+                }
+                
+                gameOverScreen.classList.remove('hidden');
+                
+                // Track event if Google Analytics is available
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'game_over', {
+                        'event_category': 'Game',
+                        'event_label': 'Game Over',
+                        'value': score
+                    });
+                }
+            }
+            
+            // Event listeners
+            startButton.addEventListener('click', startGame);
+            restartButton.addEventListener('click', () => {
+                playSound(restartSound);
+                startGame();
+            });
+            
+            // Input handling for jump
+            function handleJump(e) {
+                if (gameRunning) {
+                    spiderman.jump();
+                    e.preventDefault();
+                }
+            }
+            
+            canvas.addEventListener('click', handleJump);
+            canvas.addEventListener('touchstart', handleJump);
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' || e.code === 'ArrowUp') {
+                    handleJump(e);
+                }
+            });
+            
+            // Prevent screen scrolling on mobile
+            document.addEventListener('touchmove', (e) => {
+                if (gameRunning) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Ensure canvas is properly sized
+            function resizeCanvas() {
+                const container = document.querySelector('.game-container');
+                const maxHeight = window.innerHeight - 100;
+                const aspectRatio = canvas.height / canvas.width;
+                
+                let newWidth = container.clientWidth;
+                let newHeight = newWidth * aspectRatio;
+                
+                if (newHeight > maxHeight) {
+                    newHeight = maxHeight;
+                    newWidth = newHeight / aspectRatio;
+                }
+                
+                canvas.style.width = newWidth + 'px';
+                canvas.style.height = newHeight + 'px';
+            }
+            
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            
+            // Initialize high scores list
+            updateHighScoresList();
+            
+            // 3D Spider-Man Model with Three.js
+            function initSpiderman3D() {
+                if (typeof THREE === 'undefined') {
+                    console.warn('Three.js not available');
+                    return;
+                }
+                
+                const canvas = document.getElementById('spiderman3dCanvas');
+                
+                // Create scene
+                const scene = new THREE.Scene();
+                
+                // Camera
+                const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+                camera.position.z = 5;
+                
+                // Renderer
+                const renderer = new THREE.WebGLRenderer({
+                    canvas: canvas,
+                    alpha: true,
+                    antialias: true
+                });
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+                
+                // Ambient light
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                // Directional light
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                // Create a simple Spider-Man model (sphere with materials)
+                const geometry = new THREE.SphereGeometry(1, 32, 32);
+                
+                // Spider-Man material
+                const textureLoader = new THREE.TextureLoader();
+                const spideyMaterial = new THREE.MeshStandardMaterial({
+                    color: 0xe63946,
+                    roughness: 0.5,
+                    metalness: 0.2,
+                });
+                
+                // Create Spider-Man mesh
+                const spiderman = new THREE.Mesh(geometry, spideyMaterial);
+                scene.add(spiderman);
+                
+                // Web material
+                const webMaterial = new THREE.LineBasicMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.7
+                });
+                
+                // Create web line
+                const webGeometry = new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(0, 0, 0),
+                    new THREE.Vector3(0, 3, 0)
+                ]);
+                const webLine = new THREE.Line(webGeometry, webMaterial);
+                scene.add(webLine);
+                
+                // Add eyes
+                const eyeGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+                const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+                
+                const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+                leftEye.position.set(-0.4, 0.3, 0.85);
+                leftEye.scale.set(1, 0.5, 0.1);
+                spiderman.add(leftEye);
+                
+                const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+                rightEye.position.set(0.4, 0.3, 0.85);
+                rightEye.scale.set(1, 0.5, 0.1);
+                spiderman.add(rightEye);
+                
+                // Animation loop
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    // Rotate Spider-Man
+                    spiderman.rotation.y += 0.01;
+                    
+                    // Swing animation
+                    const time = Date.now() * 0.001;
+                    spiderman.position.y = Math.sin(time) * 0.5;
+                    webLine.geometry.setFromPoints([
+                        new THREE.Vector3(0, 3, 0),
+                        new THREE.Vector3(spiderman.position.x, spiderman.position.y, spiderman.position.z)
+                    ]);
+                    
+                    renderer.render(scene, camera);
+                }
+                
+                // Handle resize
+                function handleResize() {
+                    const container = canvas.parentElement;
+                    const width = container.clientWidth;
+                    const height = container.clientHeight;
+                    
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                    
+                    renderer.setSize(width, height);
+                }
+                
+                window.addEventListener('resize', handleResize);
+                handleResize();
+                
+                // Start animation
+                animate();
+            }
+            
+            // 3D City Background with Three.js
+            function initCityBackground() {
+                if (typeof THREE === 'undefined') {
+                    console.warn('Three.js not available');
+                    return;
+                }
+                
+                const container = document.getElementById('cityBackground');
+                
+                // Create scene
+                const scene = new THREE.Scene();
+                scene.fog = new THREE.FogExp2(0x0a1128, 0.05);
+                
+                // Camera
+                const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+                camera.position.set(0, 40, 80);
+                camera.lookAt(0, 0, 0);
+                
+                // Renderer
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setClearColor(0x000000, 0);
+                container.appendChild(renderer.domElement);
+                
+                // Lights
+                const ambientLight = new THREE.AmbientLight(0x333333);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(5, 10, 7);
+                scene.add(directionalLight);
+                
+                // Create city
+                const city = new THREE.Group();
+                scene.add(city);
+                
+                // Building geometries
+                for (let i = 0; i < 100; i++) {
+                    const width = Math.random() * 10 + 5;
+                    const height = Math.random() * 80 + 20;
+                    const depth = Math.random() * 10 + 5;
+                    
+                    const geometry = new THREE.BoxGeometry(width, height, depth);
+                    
+                    // Random building color
+                    const color = new THREE.Color(0.1, 0.1, 0.1).offsetHSL(0, 0, Math.random() * 0.2);
+                    
+                    const material = new THREE.MeshPhongMaterial({
+                        color: color,
+                        flatShading: true
+                    });
+                    
+                    const building = new THREE.Mesh(geometry, material);
+                    
+                    // Random position
+                    const x = Math.random() * 200 - 100;
+                    const z = Math.random() * 200 - 100;
+                    
+                    building.position.set(x, height / 2, z);
+                    
+                    city.add(building);
+                    
+                    // Add windows
+                    const windowGeometry = new THREE.PlaneGeometry(0.8, 0.8);
+                    const windowMaterial = new THREE.MeshBasicMaterial({
+                        color: 0xffff99,
+                        transparent: true,
+                        opacity: Math.random() * 0.5 + 0.25
+                    });
+                    
+                    // Add windows to sides of buildings
+                    for (let wx = -width / 2 + 1; wx < width / 2; wx += 2) {
+                        for (let wy = 1; wy < height; wy += 3) {
+                            if (Math.random() > 0.3) {
+                                // Front windows
+                                const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+                                windowMesh.position.set(wx, wy, depth / 2 + 0.01);
+                                building.add(windowMesh);
+                                
+                                // Back windows
+                                const windowMeshBack = new THREE.Mesh(windowGeometry, windowMaterial);
+                                windowMeshBack.position.set(wx, wy, -depth / 2 - 0.01);
+                                windowMeshBack.rotation.y = Math.PI;
+                                building.add(windowMeshBack);
+                            }
+                        }
+                    }
+                    
+                    // Side windows
+                    for (let wz = -depth / 2 + 1; wz < depth / 2; wz += 2) {
+                        for (let wy = 1; wy < height; wy += 3) {
+                            if (Math.random() > 0.3) {
+                                // Right windows
+                                const windowMeshRight = new THREE.Mesh(windowGeometry, windowMaterial);
+                                windowMeshRight.position.set(width / 2 + 0.01, wy, wz);
+                                windowMeshRight.rotation.y = Math.PI / 2;
+                                building.add(windowMeshRight);
+                                
+                                // Left windows
+                                const windowMeshLeft = new THREE.Mesh(windowGeometry, windowMaterial);
+                                windowMeshLeft.position.set(-width / 2 - 0.01, wy, wz);
+                                windowMeshLeft.rotation.y = -Math.PI / 2;
+                                building.add(windowMeshLeft);
+                            }
+                        }
+                    }
+                }
+                
+                // Add ground
+                const groundGeometry = new THREE.PlaneGeometry(500, 500);
+                const groundMaterial = new THREE.MeshPhongMaterial({
+                    color: 0x0a1128,
+                    shininess: 10
+                });
+                const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                ground.rotation.x = -Math.PI / 2;
+                scene.add(ground);
+                
+                // Animation
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    city.rotation.y += 0.001;
+                    
+                    renderer.render(scene, camera);
+                }
+                
+                // Handle resize
+                function onWindowResize() {
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                }
+                
+                window.addEventListener('resize', onWindowResize, false);
+                
+                // Start animation
+                animate();
+            }
+            
+            // Track page view if Google Analytics is available
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    'page_title': 'Spiderman Web Swing 3D Game',
+                    'page_location': window.location.href,
+                    'page_path': window.location.pathname
+                });
+            }
+        });
+    </script>
+</body>
+</html>
